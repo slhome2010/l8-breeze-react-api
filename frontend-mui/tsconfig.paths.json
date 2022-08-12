@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"],
+      "@/*": ["src/*"],
+      "@svg/*": ["src/assets/svg/*"],
+      "@img/*": ["src/assets/images/*"],
+      "@icons/*": ["src/assets/icons/*"],
+      "@shared/*": ["src/shared/*"],
+      "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@constants/*": ["src/constants/*"],
+      "@layouts/*": ["src/views/layouts/*"],
+      "@views/*": ["src/views/*"],
+      "@pages/*": ["src/views/pages/*"],
+      "@services/*": ["src/services/*"]
+    }
+  }
+}

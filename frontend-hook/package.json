@@ -1,0 +1,75 @@
+{
+  "name": "laravel-breeze-cra",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Nilanth",
+  "keywords": [
+    "react",
+    "react-router",
+    "swr",
+    "tailwindcss",
+    "vercel",
+    "axios",
+    "react-hooks",
+    "laravel",
+    "sanctum"
+  ],
+  "description": "Laravel Breeze CRA is a Create React App template for laravel sanctum based authentication",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nilanth/larave-breeze-cra",
+    "directory": "/"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@headlessui/react": "^1.5.0",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.9.2",
+    "@mui/styled-engine-sc": "^5.8.0",
+    "@tailwindcss/forms": "^0.5.0",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^13",
+    "@testing-library/user-event": "^14",
+    "autoprefixer": "^10.4.2",
+    "axios": "^0.27",
+    "postcss": "^8.4.8",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-router-dom": "^6",
+    "react-scripts": "5.0.0",
+    "styled-components": "^5.3.5",
+    "swr": "^1.2.2",
+    "tailwindcss": "^3.0.23",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
