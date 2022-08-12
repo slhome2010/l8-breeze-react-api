@@ -32,9 +32,9 @@ export default function SignIn() {
   const handleSubmit = async event => {
     event.preventDefault()
     const data = new FormData(event.currentTarget);
-    login({ email: data.get('email'), password: data.get('password'), setErrors, setStatus })
+    login({ email: data.get('email'), password: data.get('password'), remember: data.get('remember'), setErrors, setStatus })
   }
-  console.log(errors);
+  console.log(errors, status);
   return (
     <GuestLayout >
       <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -67,7 +67,7 @@ export default function SignIn() {
           autoComplete="current-password"
         />
         <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
+          control={<Checkbox name="remember" value="1" color="primary" />}
           label="Remember me"
         />
         <Button
