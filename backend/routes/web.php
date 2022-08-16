@@ -17,8 +17,8 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
-require __DIR__.'/auth.php';
-
 Route::get('/dashboard', function () {
     // Only verified users may access this route...
-})->middleware('verified');
+})->middleware(['auth','verified'])->name('dashboard');
+
+require __DIR__.'/auth.php';

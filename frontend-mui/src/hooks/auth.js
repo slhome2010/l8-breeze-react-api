@@ -29,12 +29,14 @@ export const useAuth = ({middleware, redirectIfAuthenticated} = {}) => {
     setErrors([])
     axios
       .post('/register', props)
-      .then(() => mutate())
+      .then(response => {console.log(response)  
+        mutate()})
       .catch(error => {
         if (error.response.status !== 422) throw error
         setErrors(Object.values(error.response.data.errors).flat())
       })
   }
+
 
   const login = async ({setErrors, setStatus, ...props}) => {
     await csrf()
@@ -81,6 +83,19 @@ export const useAuth = ({middleware, redirectIfAuthenticated} = {}) => {
       .then(response => setStatus(response.data.status))
   }
 
+  const verifyEmail = async ({setErrors, setStatus, ...props}) => {
+    await csrf()
+    setErrors([])
+    setStatus(null)
+    axios
+      .get('/email/verify', props)
+      .then(() => mutate())
+      .catch(error => {
+        if (error.response.status !== 422) throw error
+        setErrors(Object.values(error.response.data.errors).flat())
+      })
+  }
+
   const logout = async () => {
     if (!error) {
       await axios.post('/logout')
@@ -100,6 +115,7 @@ export const useAuth = ({middleware, redirectIfAuthenticated} = {}) => {
     login,
     forgotPassword,
     resetPassword,
+    verifyEmail,
     resendEmailVerification,
     logout
   }
