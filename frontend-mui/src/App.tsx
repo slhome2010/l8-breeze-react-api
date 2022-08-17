@@ -8,6 +8,7 @@ import ForgotPassword from "@/views/pages/auth/ForgotPassword";
 import ResetPassword from "@/views/pages/auth/ResetPassword";
 import VerifyEmail from "@/views/pages/auth/VerifyEmail";
 import Dashboard from '@pages/dashboard';
+import Home from '@pages/home';
 import NotFoundPage from '@pages/404';
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<SignIn />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/login" element={<SignIn />} />
             <Route path="/register" element={<SignUp />} />
             <Route path="/forgot" element={<ForgotPassword />} />

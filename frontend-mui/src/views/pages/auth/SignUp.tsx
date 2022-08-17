@@ -22,10 +22,10 @@ export default function SignUp() {
     redirectIfAuthenticated: "/verify-email",
   });
 
-  const [name, setName] = useState("");
+  /* const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [password_confirmation, setPasswordConfirmation] = useState("");
+  const [password_confirmation, setPasswordConfirmation] = useState(""); */
   const [errors, setErrors] = useState([]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,7 +39,7 @@ export default function SignUp() {
       setErrors,
     });
   };
-  console.log(errors);
+  
   return (
     <GuestLayout>
       <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>

@@ -34,7 +34,7 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
     login({ email: data.get('email'), password: data.get('password'), remember: data.get('remember'), setErrors, setStatus })
   }
-  console.log(errors, status);
+  
   return (
     <GuestLayout >
       <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
