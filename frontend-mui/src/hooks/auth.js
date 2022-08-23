@@ -9,6 +9,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   let params = useParams();
 
   const { cache } = useSWRConfig()
+
   const logger = (useSWRNext) => {
     return (key, fetcher, config) => {
       // Добавим регистратор в исходный fetcher.
@@ -119,21 +120,22 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
       })
   }
 
-  const logout = async () => {
+  const logout = async (reload = true) => {
     if (!error) {
       await axios.post('/logout')
       mutate()
     }
-    window.location.pathname = '/login'
+    if (reload) window.location.pathname = '/login'
   }
 
   useEffect(() => {
     console.log('useEffect:', middleware, user)
-    //console.log("auth user: ", user, "auth error: ", error)
-    if (middleware === 'guest' && redirectIfAuthenticated && user?.email_verified_at) navigate(redirectIfAuthenticated)
-    //if (middleware === 'guest' && redirectIfAuthenticated && !user?.email_verified_at) logout()
+
+    if (middleware === 'guest' && redirectIfAuthenticated && user) {
+      if (user.email_verified_at) navigate(redirectIfAuthenticated)
+      else logout(false)        
+    }
     if (middleware === 'auth' && error) logout()
-    cache.clear()
   }, [user, error])
 
   console.log("useAuth user: ", user, "useAuth error: ", error)
