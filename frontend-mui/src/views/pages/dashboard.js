@@ -27,6 +27,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import AccountMenu from '@components/AccountMenu';
 import { useAuth } from '@hooks/auth';
 
 function Copyright(props) {
@@ -95,8 +96,8 @@ function DashboardContent() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  const { logout } = useAuth();
-
+  const { user, logout } = useAuth();
+  console.log('dashboard')
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -133,6 +134,7 @@ function DashboardContent() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            <AccountMenu user={user}/>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

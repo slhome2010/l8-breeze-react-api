@@ -19,9 +19,9 @@ import { useAuth } from "@hooks/auth";
 export default function SignUp() {
   const { register } = useAuth({
     middleware: "guest",
-    redirectIfAuthenticated: "/verify-email",
+    redirectIfAuthenticated: "/dashboard",
   });
-
+  console.log('SignUp')
   /* const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

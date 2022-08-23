@@ -3,7 +3,7 @@ import { useAuth } from 'hooks/auth'
 
 const AppLayout = ({ header, children }) => {
   const { user } = useAuth({ middleware: 'auth' })
-   
+   console.log('AppLayout')
   return (
     <div className="min-h-screen bg-gray-100">
       <Navigation user={user} />

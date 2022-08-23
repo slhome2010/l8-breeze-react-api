@@ -23,7 +23,7 @@ export default function SignIn() {
     middleware: 'guest',
     redirectIfAuthenticated: '/dashboard'
   })
-
+  console.log('SignIn')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState([])

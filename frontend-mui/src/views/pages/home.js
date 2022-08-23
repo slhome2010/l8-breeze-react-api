@@ -4,7 +4,7 @@ import { useAuth } from '@hooks/auth'
 
 function Home() {
   const { user } = useAuth({ middleware: 'guest' })
-
+  console.log('Home')
   return (
     <div className="relative flex items-top justify-center
     min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">

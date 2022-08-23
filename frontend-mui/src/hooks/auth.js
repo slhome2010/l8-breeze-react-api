@@ -1,11 +1,25 @@
-import useSWR from 'swr'
+import useSWR, { useSWRConfig } from 'swr'
 import axios from '@services/axios'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 
+
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   let navigate = useNavigate();
   let params = useParams();
+
+  const { cache } = useSWRConfig()
+  const logger = (useSWRNext) => {
+    return (key, fetcher, config) => {
+      // Добавим регистратор в исходный fetcher.
+      const extendedFetcher = (...args) => {
+        console.log('SWR запрос:', key)
+        return fetcher(...args)
+      }
+      // Выполняем хук с новым fetcher-ом.
+      return useSWRNext(key, extendedFetcher, config)
+    }
+  }
 
   const { data: user, error, mutate } = useSWR('/api/user', () =>
     axios
@@ -14,11 +28,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
       .catch(error => {
         if (error.response.status !== 409) throw error
 
-        mutate('/verify-email')
+        mutate('/api/user')
       }),
     {
-      revalidateIfStale: false,
-      revalidateOnFocus: false
+      revalidateIfStale: true,
+      revalidateOnFocus: false,
+      use: [logger]
     }
   )
 
@@ -30,8 +45,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     axios
       .post('/register', props)
       .then(response => {
-        console.log(response)
+        console.log("register response: ", response)
         mutate()
+        navigate(`/verify-email?resend=${btoa(response.data.status)}`)
       })
       .catch(error => {
         if (error.response.status !== 422) throw error
@@ -44,9 +60,14 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     await csrf()
     setErrors([])
     setStatus(null)
+    console.log("login request: ", props)
     axios
       .post('/login', props)
-      .then(() => mutate())
+      .then(response => {
+
+        console.log("login response: ", response)
+        mutate()
+      })
       .catch(error => {
         if (error.response.status !== 422) throw error
         setErrors(Object.values(error.response.data.errors).flat())
@@ -107,11 +128,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   }
 
   useEffect(() => {
-    if (middleware === 'guest' && redirectIfAuthenticated && user) navigate(redirectIfAuthenticated)
+    console.log('useEffect:', middleware, user)
+    //console.log("auth user: ", user, "auth error: ", error)
+    if (middleware === 'guest' && redirectIfAuthenticated && user?.email_verified_at) navigate(redirectIfAuthenticated)
+    //if (middleware === 'guest' && redirectIfAuthenticated && !user?.email_verified_at) logout()
     if (middleware === 'auth' && error) logout()
+    cache.clear()
   }, [user, error])
 
-  console.log("auth: ", user, error)
+  console.log("useAuth user: ", user, "useAuth error: ", error)
 
   return {
     user,

@@ -18,7 +18,7 @@ const VerifyEmail = () => {
     middleware: 'auth'
   })
   const [status, setStatus] = useState(null)
-
+console.log("VerifyEmail: ",status)
   return (
     <GuestLayout>
       <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>

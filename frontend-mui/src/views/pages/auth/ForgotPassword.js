@@ -21,6 +21,7 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [errors, setErrors] = useState([])
   const [status, setStatus] = useState(null)
+  console.log('ForgotPassword')
   console.log(errors, status);
   const handleSubmit = event => {
     event.preventDefault()

@@ -16,14 +16,14 @@ import { useAuth } from "@hooks/auth";
 export default function ResetPassword() {
   const params = useParams()
   const { resetPassword } = useAuth({ middleware: 'guest' })
-  console.log(params)
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [password_confirmation, setPasswordConfirmation] = useState('')
   const [errors, setErrors] = useState([])
   const [status, setStatus] = useState(null)
 
-  const submitForm = event => {
+  /* const submitForm = event => {
     event.preventDefault()
     resetPassword({
       email,
@@ -32,12 +32,14 @@ export default function ResetPassword() {
       setErrors,
       setStatus
     })
-  }
+  } */
 
   useEffect(() => {
     setEmail(params.email || '')
   }, [params.email])
+  console.log('ResetPassword')
   console.log(params)
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
