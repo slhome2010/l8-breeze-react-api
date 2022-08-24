@@ -19,6 +19,9 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     // Only verified users may access this route...
+    return redirect()->intended(
+        config('app.frontend_url') . '/dashboard' . '?verified=1'
+    );
 })->middleware(['auth','verified'])->name('dashboard');
 
 require __DIR__.'/auth.php';
