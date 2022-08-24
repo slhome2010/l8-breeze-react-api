@@ -22,7 +22,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     }
   }
 
-  const { data: user, error, mutate } = useSWR('/api/user', () =>
+  const { data: user, error, mutate, isValidating} = useSWR('/api/user', () =>
     axios
       .get('/api/user')
       .then(response => response.data)
@@ -37,6 +37,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
       use: [logger]
     }
   )
+
+  const isLoading = Boolean(!user && !error)
+  const isVeryfied = Boolean(!error && user?.email_verified_at)
 
   const csrf = () => axios.get('/sanctum/csrf-cookie')
 
@@ -123,9 +126,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   const logout = async (reload = true) => {
     if (!error) {
       await axios.post('/logout')
-      mutate()
+      mutate(null)
     }
     if (reload) window.location.pathname = '/login'
+    console.log('logout')
   }
 
   useEffect(() => {
@@ -138,7 +142,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     if (middleware === 'auth' && error) logout()
   }, [user, error])
 
-  console.log("useAuth user: ", user, "useAuth error: ", error)
+  console.table({"user" : user?.email, "error" : error?.message, "isValidating" : isValidating, "isLoading" : isLoading, "isVeryfied" : isVeryfied})
 
   return {
     user,
