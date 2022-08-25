@@ -1,14 +1,19 @@
 import useSWR, { useSWRConfig } from 'swr'
 import axios from '@services/axios'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 
 
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
+  const apiUrl = '/api/user';
   let navigate = useNavigate();
   let params = useParams();
 
-  const { cache } = useSWRConfig()
+  const [isLoading, setIsLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isVeryfied, setIsVeryfied] = useState(false);
+ 
+ /*  const { cache } = useSWRConfig() */
 
   const logger = (useSWRNext) => {
     return (key, fetcher, config) => {
@@ -22,24 +27,27 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     }
   }
 
-  const { data: user, error, mutate, isValidating} = useSWR('/api/user', () =>
+  const { data: user, error, mutate, isValidating } = useSWR(apiUrl, () =>
     axios
-      .get('/api/user')
+      .get(apiUrl)
       .then(response => response.data)
       .catch(error => {
         if (error.response.status !== 409) throw error
-
-        mutate('/api/user')
+        mutate(apiUrl)
       }),
     {
-      revalidateIfStale: true,
+      revalidateIfStale: false,
       revalidateOnFocus: false,
+      revalidateOnReconnect: true,
+      revalidateOnMount: true,
+      errorRetryCount: 2,
+      //refreshInterval: 1000,
       use: [logger]
     }
   )
 
-  const isLoading = Boolean(!user && !error)
-  const isVeryfied = Boolean(!error && user?.email_verified_at)
+ /*  const isLoading = Boolean(!user && !error)
+  const isVeryfied = Boolean(user?.email_verified_at) */
 
   const csrf = () => axios.get('/sanctum/csrf-cookie')
 
@@ -123,26 +131,30 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
       })
   }
 
-  const logout = async (reload = true) => {
+  const logout = async () => {
     if (!error) {
       await axios.post('/logout')
-      mutate(null)
+      mutate()
     }
-    if (reload) window.location.pathname = '/login'
-    console.log('logout')
+    window.location.pathname = '/login'    
   }
 
   useEffect(() => {
     console.log('useEffect:', middleware, user)
-
+    setIsVeryfied(Boolean(user?.email_verified_at))
+    setIsLoading(Boolean(!user && !error))
     if (middleware === 'guest' && redirectIfAuthenticated && user) {
-      if (user.email_verified_at) navigate(redirectIfAuthenticated)
-      else logout(false)        
+      if (isVeryfied) navigate(redirectIfAuthenticated)
+      else {
+        // logout(false) 
+        mutate()
+        navigate(`/verify-email`)
+      }
     }
     if (middleware === 'auth' && error) logout()
   }, [user, error])
 
-  console.table({"user" : user?.email, "error" : error?.message, "isValidating" : isValidating, "isLoading" : isLoading, "isVeryfied" : isVeryfied})
+  console.table({ "user": user?.email, "error": error?.message, "isValidating": isValidating, "isLoading": isLoading, "isVeryfied": isVeryfied }, ["user"])
 
   return {
     user,
@@ -152,6 +164,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     resetPassword,
     verifyEmail,
     resendEmailVerification,
-    logout
+    logout,
+    isLoading,
+    isVeryfied
   }
 }

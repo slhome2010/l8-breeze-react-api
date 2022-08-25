@@ -18,7 +18,7 @@ const VerifyEmail = () => {
     middleware: 'auth'
   })
   const [status, setStatus] = useState(null)
-console.log("VerifyEmail: ",status)
+console.log("VerifyEmail Form: ",status)
   return (
     <GuestLayout>
       <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -38,15 +38,20 @@ console.log("VerifyEmail: ",status)
           </div>
         )}
         <div className="mt-4 flex items-center justify-between">
-          <Button onClick={() => resendEmailVerification({ setStatus })}>
+          <Button 
+            type="button"
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }} 
+            onClick={() => resendEmailVerification({ setStatus })}>
               Resend Verification Email
           </Button>
-          <button
+          <Button
             type="button"
-            className="underline text-sm text-gray-600 hover:text-gray-900"
+            variant="contained"
+            sx={{ mt: 3, mb: 2, ml: 3 }}            
             onClick={logout}>
               Logout
-          </button>
+          </Button>
         </div>
       
     </GuestLayout>
