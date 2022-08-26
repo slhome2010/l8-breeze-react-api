@@ -16,14 +16,13 @@ import { useAuth } from '@hooks/auth'
 
 import GuestLayout from '@layouts/GuestLayout'
 
-
-
 export default function SignIn() {
   const { login } = useAuth({
     middleware: 'guest',
-    redirectIfAuthenticated: '/dashboard'
+    redirectIfAuthenticated: '/dashboard',    
+    initiator:  'SignIn'
   })
-  console.log('login Form')
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState([])

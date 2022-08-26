@@ -20,8 +20,9 @@ export default function SignUp() {
   const { register } = useAuth({
     middleware: "guest",
     redirectIfAuthenticated: "/dashboard",
+    initiator: 'SignUp'
   });
-  console.log('SignUp')
+  
   /* const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

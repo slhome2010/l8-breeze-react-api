@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 
 
-export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
+export const useAuth = ({ middleware, redirectIfAuthenticated, initiator } = {}) => {
   const apiUrl = '/api/user';
   let navigate = useNavigate();
   let params = useParams();
@@ -57,9 +57,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     axios
       .post('/register', props)
       .then(response => {
-        console.log("register response: ", response)
-        mutate()
-        navigate(`/verify-email?resend=${btoa(response.data.status)}`)
+        console.log("register response: ", response.data.status)
+        mutate(apiUrl)
+        navigate('/verify-email')
       })
       .catch(error => {
         if (error.response.status !== 422) throw error
@@ -76,9 +76,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     axios
       .post('/login', props)
       .then(response => {
-
-        console.log("login response: ", response)
-        mutate()
+        console.log("login response: ", response.data.status)
+        mutate(apiUrl)
       })
       .catch(error => {
         if (error.response.status !== 422) throw error
@@ -118,23 +117,23 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
       .then(response => setStatus(response.data.status))
   }
 
-  const verifyEmail = async ({ setErrors, setStatus, ...props }) => {
+  /* const verifyEmail = async ({ setErrors, setStatus, ...props }) => {
     await csrf()
     setErrors([])
     setStatus(null)
     axios
       .get('/email/verify', props)
-      .then(() => mutate())
+      .then(() =>mutate(apiUrl))
       .catch(error => {
         if (error.response.status !== 422) throw error
         setErrors(Object.values(error.response.data.errors).flat())
       })
-  }
+  } */
 
   const logout = async () => {
     if (!error) {
       await axios.post('/logout')
-      mutate()
+      mutate(apiUrl)
     }
     window.location.pathname = '/login'    
   }
@@ -144,17 +143,22 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     setIsVeryfied(Boolean(user?.email_verified_at))
     setIsLoading(Boolean(!user && !error))
     if (middleware === 'guest' && redirectIfAuthenticated && user) {
-      if (isVeryfied) navigate(redirectIfAuthenticated)
+      if (isVeryfied) 
+        navigate(redirectIfAuthenticated)
       else {
         // logout(false) 
-        mutate()
+       // mutate(apiUrl)
         navigate(`/verify-email`)
       }
     }
-    if (middleware === 'auth' && error) logout()
+    if (middleware === 'auth' && error) {
+      
+      logout()
+    }
   }, [user, error])
 
-  console.table({ "user": user?.email, "error": error?.message, "isValidating": isValidating, "isLoading": isLoading, "isVeryfied": isVeryfied }, ["user"])
+  /* console.table({ "user": user?.email, "error": error?.message, "isValidating": isValidating, "isLoading": isLoading, "isVeryfied": isVeryfied }, ["user"]) */
+  console.table({ "user": user?.email, "error": error?.message, "initiator": initiator, },)
 
   return {
     user,
@@ -162,7 +166,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     login,
     forgotPassword,
     resetPassword,
-    verifyEmail,
+    //verifyEmail,
     resendEmailVerification,
     logout,
     isLoading,

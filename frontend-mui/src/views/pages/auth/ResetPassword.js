@@ -15,7 +15,10 @@ import { useAuth } from "@hooks/auth";
 
 export default function ResetPassword() {
   const params = useParams()
-  const { resetPassword } = useAuth({ middleware: 'guest' })
+  const { resetPassword } = useAuth({
+    middleware: 'guest',
+    initiator: 'ResetPassword'
+  })
   
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

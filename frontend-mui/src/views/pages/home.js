@@ -3,7 +3,10 @@ import { useAuth } from '@hooks/auth'
 /* import reactLogo from 'images/logo512.png'; */
 
 function Home() {
-  const { user } = useAuth({ middleware: 'guest' })
+  const { user } = useAuth({
+    middleware: 'guest',
+    initiator: 'home'
+  })
   console.log('Home')
   return (
     <div className="relative flex items-top justify-center

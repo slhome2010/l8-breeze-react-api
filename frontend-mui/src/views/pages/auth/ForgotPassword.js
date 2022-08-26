@@ -16,7 +16,10 @@ import AuthSessionStatus from '@components/auth/AuthSessionStatus';
 import GuestLayout from '@layouts/GuestLayout'
 
 export default function ForgotPassword() {
-  const { forgotPassword } = useAuth({ middleware: 'guest' })
+  const { forgotPassword } = useAuth({
+    middleware: 'guest',
+    initiator: 'ForgotPassword'
+  })
 
   const [email, setEmail] = useState('')
   const [errors, setErrors] = useState([])

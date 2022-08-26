@@ -96,8 +96,10 @@ function DashboardContent() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  const { user, logout } = useAuth();
-  console.log('dashboard')
+  const { user, logout } = useAuth({    
+    initiator: 'dashboard'
+  });
+  
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>

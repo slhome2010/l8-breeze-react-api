@@ -15,10 +15,11 @@ import {Link} from 'react-router-dom';
 
 const VerifyEmail = () => {
   const { logout, resendEmailVerification } = useAuth({
-    middleware: 'auth'
+    middleware: 'auth',
+    initiator: 'VerifyEmail'
   })
   const [status, setStatus] = useState(null)
-console.log("VerifyEmail Form: ",status)
+
   return (
     <GuestLayout>
       <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
