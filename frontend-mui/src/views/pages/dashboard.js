@@ -97,7 +97,8 @@ function DashboardContent() {
     setOpen(!open);
   };
   const { user, logout } = useAuth({    
-    initiator: 'dashboard'
+    initiator: 'dashboard',
+    middleware: 'auth'
   });
   
   return (

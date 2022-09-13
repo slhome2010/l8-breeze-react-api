@@ -1,4 +1,4 @@
-import useSWR, { useSWRConfig } from 'swr'
+import useSWR from 'swr'
 import axios from '@services/axios'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
@@ -6,11 +6,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 export const useAuth = ({ middleware, redirectIfAuthenticated, initiator } = {}) => {
   const apiUrl = '/api/user';
-  let navigate = useNavigate();
-  let params = useParams();
+  const navigate = useNavigate();
+  const params = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [loggedIn, setLoggedIn] = useState(false);
+ // const [loggedIn, setLoggedIn] = useState(false);
   const [isVeryfied, setIsVeryfied] = useState(false);
  
  /*  const { cache } = useSWRConfig() */
@@ -30,7 +30,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, initiator } = {})
   const { data: user, error, mutate, isValidating } = useSWR(apiUrl, () =>
     axios
       .get(apiUrl)
-      .then(response => response.data)
+      .then(response => { 
+        setIsVeryfied( Boolean(response.data?.email_verified_at) )
+        console.log('response apiUser:', isVeryfied )
+        return response.data
+      })
       .catch(error => {
         if (error.response.status !== 409) throw error
         mutate(apiUrl)
@@ -45,7 +49,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, initiator } = {})
       use: [logger]
     }
   )
-
+  console.log('After response apiUser:', isVeryfied )
  /*  const isLoading = Boolean(!user && !error)
   const isVeryfied = Boolean(user?.email_verified_at) */
 
@@ -57,7 +61,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, initiator } = {})
     axios
       .post('/register', props)
       .then(response => {
-        console.log("register response: ", response.data.status)
+        console.log('register response: ', response.data.status)
         mutate(apiUrl)
         navigate('/verify-email')
       })
@@ -72,12 +76,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, initiator } = {})
     await csrf()
     setErrors([])
     setStatus(null)
-    console.log("login request: ", props)
+    console.log('login request: ', props)
     axios
       .post('/login', props)
       .then(response => {
-        console.log("login response: ", response.data.status)
-        mutate(apiUrl)
+        console.log('login response: ', response.status)
+        mutate()
       })
       .catch(error => {
         if (error.response.status !== 422) throw error
@@ -116,20 +120,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, initiator } = {})
       .post('/email/verification-notification')
       .then(response => setStatus(response.data.status))
   }
-
-  /* const verifyEmail = async ({ setErrors, setStatus, ...props }) => {
-    await csrf()
-    setErrors([])
-    setStatus(null)
-    axios
-      .get('/email/verify', props)
-      .then(() =>mutate(apiUrl))
-      .catch(error => {
-        if (error.response.status !== 422) throw error
-        setErrors(Object.values(error.response.data.errors).flat())
-      })
-  } */
-
+  
   const logout = async () => {
     if (!error) {
       await axios.post('/logout')
@@ -139,26 +130,19 @@ export const useAuth = ({ middleware, redirectIfAuthenticated, initiator } = {})
   }
 
   useEffect(() => {
-    console.log('useEffect:', middleware, user)
-    setIsVeryfied(Boolean(user?.email_verified_at))
-    setIsLoading(Boolean(!user && !error))
+    console.log('useEffect', 'middleware:', middleware, 'user:', user?.email)
+    setIsLoading( Boolean(!user && !error) )
+
     if (middleware === 'guest' && redirectIfAuthenticated && user) {
-      if (isVeryfied) 
-        navigate(redirectIfAuthenticated)
-      else {
-        // logout(false) 
-       // mutate(apiUrl)
-        navigate(`/verify-email`)
-      }
+      console.log('Veryfied:', user.email_verified_at, Boolean(user.email_verified_at), isVeryfied)
+      if (isVeryfied) navigate(redirectIfAuthenticated)
+      else navigate('/verify-email')     
     }
-    if (middleware === 'auth' && error) {
-      
-      logout()
-    }
+    if (middleware === 'auth' && error)  logout()    
   }, [user, error])
 
-  /* console.table({ "user": user?.email, "error": error?.message, "isValidating": isValidating, "isLoading": isLoading, "isVeryfied": isVeryfied }, ["user"]) */
-  console.table({ "user": user?.email, "error": error?.message, "initiator": initiator, },)
+  /* console.table({ 'user': user?.email, 'error': error?.message, 'isValidating': isValidating, 'isLoading': isLoading, 'isVeryfied': isVeryfied }, ['user']) */
+  console.table({ 'user': user?.email, 'error': error?.message, 'initiator': initiator, },)
 
   return {
     user,

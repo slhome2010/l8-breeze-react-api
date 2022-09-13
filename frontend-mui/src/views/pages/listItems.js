@@ -9,21 +9,53 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { Permissible, PermissibleRender } from '@brainhubeu/react-permissible';
+
+const callbackFunction = ({ userPermissions, requiredPermissions }) => {
+  console.log(`
+    react-permissible: Access Denied
+    userPermissions: ${userPermissions}
+    requiredPermissions: ${requiredPermissions}
+  `);
+};
+
+
+const PermissibleOrders = <PermissibleRender
+userPermissions={['ACCESS_ADMIN']}
+requiredPermissions={['ACCESS_DASHBOARD', 'ACCESS_ADMIN']}
+/* renderOtherwise={null}  */// optional
+oneperm={true} // optional
+>
+  <ListItemButton>
+    <ListItemIcon>
+      <ShoppingCartIcon />
+    </ListItemIcon>
+    <ListItemText primary="Orders" />
+  </ListItemButton>
+</PermissibleRender>;
+
+const ClearList = (<ListItemButton>
+  <ListItemIcon>
+    <DashboardIcon />
+  </ListItemIcon>
+  <ListItemText primary="Dashboard" />
+</ListItemButton>);
+
+const CanOrders = Permissible(
+ClearList,
+  ['ACCESS_ADMIN'],
+  ['ACCESS_DASHBOARD', 'ACCESS_ADMIN'],
+  callbackFunction,
+  true
+);
+console.log(typeof (ClearList), typeof (PermissibleOrders), typeof (CanOrders), typeof(<CanOrders/>))
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItemButton>
+    {ClearList}
+    {PermissibleOrders}
+    {/* <CanOrders/> */}
+    
     <ListItemButton>
       <ListItemIcon>
         <PeopleIcon />
