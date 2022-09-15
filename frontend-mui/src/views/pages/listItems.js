@@ -48,13 +48,27 @@ ClearList,
   callbackFunction,
   true
 );
-console.log(typeof (ClearList), typeof (PermissibleOrders), typeof (CanOrders), typeof(<CanOrders/>))
+const PermOrders = () => {
+  
+  const CanOrders = Permissible(
+    ClearList,
+      ['ACCESS_ADMIN'],
+      ['ACCESS_DASHBOARD', 'ACCESS_ADMIN'],
+      callbackFunction,
+      true
+    )
+return <CanOrders />
+} 
+
+
+console.log(typeof (ClearList), typeof (PermissibleOrders), typeof (CanOrders), typeof(PermOrders))
+console.log(ClearList, PermissibleOrders, PermOrders)
 
 export const mainListItems = (
   <React.Fragment>
     {ClearList}
     {PermissibleOrders}
-    {/* <CanOrders/> */}
+    {PermOrders}
     
     <ListItemButton>
       <ListItemIcon>

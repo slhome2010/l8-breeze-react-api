@@ -100,7 +100,7 @@ function DashboardContent() {
     initiator: 'dashboard',
     middleware: 'auth'
   });
-  
+  console.log('mainListItems', typeof(mainListItems))
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -224,5 +224,6 @@ function DashboardContent() {
 }
 
 export default function Dashboard() {
+  console.log(typeof(DashboardContent), typeof(<DashboardContent />))
   return <DashboardContent />;
 }
