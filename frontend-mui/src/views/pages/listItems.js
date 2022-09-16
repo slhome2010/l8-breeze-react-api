@@ -10,15 +10,16 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Permissible, PermissibleRender } from '@brainhubeu/react-permissible';
+import CanOrders from '@components/CanOrders';
 
-const callbackFunction = ({ userPermissions, requiredPermissions }) => {
+
+/* const callbackFunction = ({ userPermissions, requiredPermissions }) => {
   console.log(`
     react-permissible: Access Denied
     userPermissions: ${userPermissions}
     requiredPermissions: ${requiredPermissions}
   `);
-};
-
+}; */
 
 const PermissibleOrders = <PermissibleRender
 userPermissions={['ACCESS_ADMIN']}
@@ -41,14 +42,14 @@ const ClearList = (<ListItemButton>
   <ListItemText primary="Dashboard" />
 </ListItemButton>);
 
-const CanOrders = Permissible(
+/* const CanOrders = Permissible(
 ClearList,
   ['ACCESS_ADMIN'],
   ['ACCESS_DASHBOARD', 'ACCESS_ADMIN'],
   callbackFunction,
   true
-);
-const PermOrders = () => {
+); */
+/* const PermOrders = () => {
   
   const CanOrders = Permissible(
     ClearList,
@@ -58,17 +59,17 @@ const PermOrders = () => {
       true
     )
 return <CanOrders />
-} 
+}  */
 
 
-console.log(typeof (ClearList), typeof (PermissibleOrders), typeof (CanOrders), typeof(PermOrders))
-console.log(ClearList, PermissibleOrders, PermOrders)
+console.log(typeof (PermissibleOrders), typeof (<CanOrders />))
+console.log( PermissibleOrders, <CanOrders />)
 
 export const mainListItems = (
   <React.Fragment>
     {ClearList}
     {PermissibleOrders}
-    {PermOrders}
+    <CanOrders />
     
     <ListItemButton>
       <ListItemIcon>
